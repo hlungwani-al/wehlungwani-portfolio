@@ -1,13 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import { TypeAnimation } from "react-type-animation";
+import Image from "next/image";
 import Navbar from "./navbar/navbar";
 import Footer from "./footer/footer";
-import { TypeAnimation } from "react-type-animation";
-import { useState, useCallback } from "react";
-import { loadFull } from "tsparticles";
-import Particles from "@tsparticles/react";
-import type { Engine } from "@tsparticles/engine";
-import Image from "next/image";
 
 export default function Home() {
   const projectDetails = [
@@ -36,16 +33,14 @@ export default function Home() {
       url: "https://northernshieldsecurity01.web.app",
     },
   ];
-  // Particles initialization
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadFull(engine);
-  }, []);
 
+  // Form state and error handling
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     description: "",
   });
+
   const [errors, setErrors] = useState({
     name: false,
     email: false,
@@ -58,11 +53,16 @@ export default function Home() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear errors when the user starts typing
+    setErrors({ ...errors, [name]: false });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const nameValid = formData.name.trim() !== "";
     const emailValid = validateEmail(formData.email);
     const descriptionValid = formData.description.trim() !== "";
@@ -101,59 +101,13 @@ export default function Home() {
 
   return (
     <div className="relative text-[#1e295e]">
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        options={{
-          background: { color: { value: "#1a1a2e" } },
-          particles: {
-            number: { value: 80 },
-            color: { value: "#ffffff" },
-            move: {
-              enable: true,
-              speed: 1.5,
-              direction: "none",
-              random: true,
-              straight: false,
-            },
-            opacity: { value: 0.7 },
-            size: { value: 2.5 },
-            shape: { type: "circle" },
-            links: {
-              enable: true,
-              distance: 150,
-              color: "#ffffff",
-              opacity: 0.4,
-              width: 1,
-            },
-          },
-          interactivity: {
-            events: {
-              onHover: {
-                enable: true,
-                mode: "grab",
-                parallax: { enable: true, force: 60 },
-              },
-            },
-          },
-        }}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "calc(100% - 5px)",
-          height: "100%",
-          zIndex: -1,
-        }}
-      />
-
       <Navbar />
 
       <main className="flex flex-col">
         {/* Hero Section */}
         <section
           id="home"
-          className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1a1a2e] to-[#16213e]"
+          className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#2c3e50] to-[#16213e]"
         >
           <div className="text-center space-y-6">
             <h2 className="text-5xl font-bold text-[#e94560] animate-float">
@@ -182,15 +136,13 @@ export default function Home() {
           className="min-h-screen flex items-center justify-center bg-[#0f3460] text-gray-100"
         >
           <div className="max-w-4xl px-4 text-center">
-            <h2 className="text-4xl font-bold mb-8 animate-slide-up">
-              About Me
-            </h2>
-            <p className="text-lg leading-relaxed animate-fade-in-delay">
+            <h2 className="text-4xl font-bold mb-8">About Me</h2>
+            <p className="text-lg leading-relaxed">
               Microsoft-certified AI engineer and full-stack developer
               specializing in building intelligent, high-performance
               applications. Expertise in:
             </p>
-            <div className="grid md:grid-cols-3 gap-6 mt-8 animate-stagger">
+            <div className="grid md:grid-cols-3 gap-6 mt-8">
               <div className="p-6 bg-[#16213e] rounded-lg shadow-xl">
                 <h3 className="text-xl font-semibold mb-3 text-[#e94560]">
                   Backend
@@ -215,15 +167,16 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Projects Section */}
         <section
           id="projects"
-          className="min-h-screen flex items-center justify-center bg-[#2c3e50] transition-all duration-500"
+          className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#2c3e50] to-[#16213e]"
         >
           <div className="text-center max-w-4xl px-4">
-            <h2 className="text-4xl font-bold mb-12 text-[#e94560] animate-slide-up">
+            <h2 className="text-4xl font-bold mb-12 text-[#e94560]">
               Featured Projects
             </h2>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 animate-stagger">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {projectDetails.map((project) => (
                 <a
                   key={project.id}
@@ -237,7 +190,7 @@ export default function Home() {
                     alt={project.title}
                     width={400}
                     height={200}
-                    className="rounded-lg mb-4 animate-pulse"
+                    className="rounded-lg mb-4"
                   />
                   <h3 className="text-2xl font-bold mb-2 text-white">
                     {project.title}
@@ -256,19 +209,20 @@ export default function Home() {
         >
           <div className="w-full max-w-2xl px-4">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-[#e94560] mb-4 animate-slide-up">
+              <h2 className="text-4xl font-bold text-[#e94560] mb-4">
                 Let&apos;s Connect
               </h2>
-              <p className="text-lg text-gray-300 animate-fade-in">
+              <p className="text-lg text-gray-300">
                 Ready to bring your vision to life? Let&apos;s collaborate!
               </p>
             </div>
 
             <form
               onSubmit={handleSubmit}
-              className="bg-[#16213e] p-8 rounded-2xl shadow-2xl animate-pop-in"
+              className="bg-[#16213e] p-8 rounded-2xl shadow-2xl"
             >
               <div className="space-y-6">
+                {/* Name Field */}
                 <div>
                   <label className="block text-gray-300 mb-2">Name</label>
                   <input
@@ -277,9 +231,7 @@ export default function Home() {
                     value={formData.name}
                     onChange={handleChange}
                     className={`w-full p-3 rounded-lg bg-[#1a1a2e] text-gray-100 ${
-                      errors.name
-                        ? "border-2 border-red-500"
-                        : "border-transparent"
+                      errors.name ? "border-2 border-red-500" : "border-transparent"
                     }`}
                   />
                   {errors.name && (
@@ -287,6 +239,7 @@ export default function Home() {
                   )}
                 </div>
 
+                {/* Email Field */}
                 <div>
                   <label className="block text-gray-300 mb-2">Email</label>
                   <input
@@ -295,18 +248,15 @@ export default function Home() {
                     value={formData.email}
                     onChange={handleChange}
                     className={`w-full p-3 rounded-lg bg-[#1a1a2e] text-gray-100 ${
-                      errors.email
-                        ? "border-2 border-red-500"
-                        : "border-transparent"
+                      errors.email ? "border-2 border-red-500" : "border-transparent"
                     }`}
                   />
                   {errors.email && (
-                    <p className="text-red-400 mt-1">
-                      Please enter a valid email
-                    </p>
+                    <p className="text-red-400 mt-1">Please enter a valid email</p>
                   )}
                 </div>
 
+                {/* Message Field */}
                 <div>
                   <label className="block text-gray-300 mb-2">Message</label>
                   <textarea
@@ -321,16 +271,14 @@ export default function Home() {
                     }`}
                   />
                   {errors.description && (
-                    <p className="text-red-400 mt-1">
-                      Please enter your message
-                    </p>
+                    <p className="text-red-400 mt-1">Please enter your message</p>
                   )}
                 </div>
 
+                {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-[#e94560] text-white py-3 rounded-lg font-semibold
-                    hover:bg-[#d1344e] transition-colors duration-300"
+                  className="w-full bg-[#e94560] text-white py-3 rounded-lg font-semibold hover:bg-[#d1344e] transition-colors duration-300"
                 >
                   Send Message
                 </button>

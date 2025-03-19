@@ -2,7 +2,7 @@ import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1e295e] p-4 text-center text-white">
+    <footer className="bg-[#00001a] p-4 text-center text-white">
       <p>&copy; 2025 We Hlungwani. All rights reserved.</p>
       <div className="flex justify-center space-x-4 mt-2">
         <a
